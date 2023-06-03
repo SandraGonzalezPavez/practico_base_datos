@@ -1,7 +1,7 @@
-CREATE DATABASE billjobs;
+-- CREATE DATABASE billjobs;
 -- cargar la base de datos de respaldo
-psql -U postgres -d billjobs -f unidad2.sql --en windows
-
+--psql -U postgres -d billjobs -f unidad2.sql --en windows
+--psql -U postgres -d billjobs < unidad2.sql --en linux
 -- 2. El cliente usuario01 ha realizado la siguiente compra: 
 
 --●producto: producto9 
@@ -15,6 +15,11 @@ psql -U postgres -d billjobs -f unidad2.sql --en windows
 --Paso2  agregar detalla en la tabla detalle_compra
 --Paso3  descontar el stock
 
+
+\c billjobs
+\echo '-----------'
+\echo 'TRANSACCION 1'
+\echo '-----------'
 BEGIN TRANSACTION;
     --Paso1  ingresar la venta en la tabla compra
     INSERT INTO compra (id, cliente_id, fecha) VALUES  (33, 1, '2023-06-01');
@@ -36,6 +41,9 @@ COMMIT;
 --se queda sin stock, no se realice la compra.
 --Paso1 
 
+\echo '-----------'
+\echo 'TRANSACCION 2'
+\echo '-----------'
 BEGIN TRANSACTION;
  --Paso1  ingresar la venta en la tabla compra
     INSERT INTO compra (id, cliente_id, fecha) VALUES  (34, 2, '2023-06-01');
@@ -50,6 +58,10 @@ BEGIN TRANSACTION;
     SET stock = stock - 3
     WHERE id = 1 OR id = 2 OR id = 8;
 COMMIT;
+
+\echo '-----------'
+\echo 'TRANSACCION 3'
+\echo '-----------'
 --conclusión: los cambios no se realizan porque no hay stock del producto 8
 --4.a Paso1 Desactivar autocommit 
 \set AUTOCOMMIT OFF
